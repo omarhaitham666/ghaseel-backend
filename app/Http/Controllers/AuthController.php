@@ -112,7 +112,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
 {
-    // التحقق من المدخلات
+    
     $validator = Validator::make($request->all(), [
         'login' => 'required|string',
         'password' => 'required|string|min:6',
@@ -132,10 +132,10 @@ class AuthController extends Controller
     $login = $request->login;
     $password = $request->password;
 
-    // تحديد إذا كان الإيميل أو رقم الهاتف
+    
     $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-    // البحث عن المستخدم
+    
     $user = User::where($fieldType, $login)->first();
 
     if (!$user || !Hash::check($password, $user->password)) {
@@ -145,7 +145,7 @@ class AuthController extends Controller
         ], 401);
     }
 
-    // إنشاء access token باستخدام Passport
+   
     $tokenResult = $user->createToken('Personal Access Token');
     $token = $tokenResult->accessToken;
     $tokenExpiration = $tokenResult->token->expires_at;
@@ -163,10 +163,10 @@ class AuthController extends Controller
 
 public function logout(Request $request)
 {
-    // الحصول على المستخدم الحالي
+    
     $user = $request->user();
 
-    // التأكد إن فيه توكن مستخدم
+    
     if ($user && $user->token()) {
         $user->token()->revoke();
 
